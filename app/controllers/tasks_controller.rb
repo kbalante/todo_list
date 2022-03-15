@@ -4,6 +4,7 @@ class TasksController < ApplicationController
   # GET /tasks or /tasks.json
   def index
     @tasks = Task.all
+    @missing_priorities = missing_priorities
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -25,7 +26,7 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to task_url(@task), notice: "Task was successfully created." }
+        format.html { redirect_to tasks_url, notice: "Task was successfully created." }
         format.json { render :show, status: :created, location: @task }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -57,7 +58,20 @@ class TasksController < ApplicationController
     end
   end
 
+  def missing_priorities
+    max_priority = Task.maximum("priority")
+    existing_priorities = Task.distinct.pluck(:priority)
+    missing_priorities = []
+    if max_priority
+      (1..max_priority).each do |i|
+        missing_priorities << i if !existing_priorities.include?(i)
+      end
+    end
+    missing_priorities
+  end
+
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params[:id])

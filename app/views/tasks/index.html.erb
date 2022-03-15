@@ -2,6 +2,12 @@
 
 <h1>Tasks</h1>
 
+<p>Missing Priorities:
+  <% @missing_priorities.each do |task| %>
+    <%= task %>
+  <% end %>
+</p>
+
 <table>
   <thead>
     <tr>
