@@ -9,3 +9,4 @@ For instance, if my current ToDo list contains items with priorities of 1, 3, 5,
 that priorities 2, 4, 6, 8, 9, 10, 11 are missing. Should I delete the todo item with priority 12, the new set of 
 missing priorities would be 2, 4, 6.
 
+![Home Page](https://github.com/kbalante/todo_list/blob/master/home-page.jpg)
