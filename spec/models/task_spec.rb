@@ -1,5 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "is valid with valid attributes" do
+    task = Task.new(title: "check out Ha Ling Peak", description: "Best trail in Canmore", priority: 2)
+    expect(task).to be_valid
+  end
+
+  it "is not valid without a title" do
+    task = Task.new(description: "Best trail in Canmore", priority: 2)
+    expect(task).to_not be_valid
+  end
+
+  it "is valid without a description" do
+    task = Task.new(title: "check out Ha Ling Peak", priority: 1)
+    expect(task).to be_valid
+  end
+
+  it "is valid without a priority" do
+    task = Task.new(title: "check out Ha Ling Peak", description: "Best trail in Canmore")
+    expect(task).to be_valid
+  end
 end

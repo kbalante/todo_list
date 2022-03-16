@@ -58,19 +58,19 @@ class TasksController < ApplicationController
     end
   end
 
-  def missing_priorities
-    max_priority = Task.maximum("priority")
-    existing_priorities = Task.distinct.pluck(:priority)
-    missing_priorities = []
-    if max_priority
-      (1..max_priority).each do |i|
-        missing_priorities << i if !existing_priorities.include?(i)
-      end
-    end
-    missing_priorities
-  end
-
   private
+
+    def missing_priorities
+      max_priority = Task.maximum("priority")
+      existing_priorities = Task.distinct.pluck(:priority)
+      missing_priorities = []
+      if max_priority
+        (1..max_priority).each do |i|
+          missing_priorities << i if !existing_priorities.include?(i)
+        end
+      end
+      missing_priorities
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_task

@@ -18,11 +18,11 @@ RSpec.describe "/tasks", type: :request do
   # Task. As you add validations to Task, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    { title: "Ha Ling Peak", description: "Best Trail in Canmore", priority: 1 }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    { description: "Best Trail in Canmore", priority: 1 }
   }
 
   describe "GET /index" do
@@ -30,6 +30,27 @@ RSpec.describe "/tasks", type: :request do
       Task.create! valid_attributes
       get tasks_url
       expect(response).to be_successful
+      expect(response.body).to include("Ha Ling Peak")
+    end
+
+    it "shows no missing priorities if all tasks have priorities" do
+      Task.create!(title: "Ha Ling Peak", description: "Best Trail in Canmore", priority: 1 )
+      Task.create!(title: "Ha Ling Peak2", description: "Best Trail in Canmore2", priority: 2 )
+      get tasks_url
+      expect(response).to be_successful
+      expect(response.body).to include("<p>Missing Priorities: </p>")
+    end
+
+    it "shows the proper missing priority if there is at least one task with a priority" do
+      Task.create!(title: "Ha Ling Peak", description: "Best Trail in Canmore" )
+      Task.create!(title: "Ha Ling Peak2", description: "Best Trail in Canmore2", priority: 2 )
+      get tasks_url
+      expect(response).to be_successful
+      expect(response.body).to include("<p>Missing Priorities: 1 </p>")
+
+      Task.create!(title: "Ha Ling Peak2", description: "Best Trail in Canmore2", priority: 5 )
+      get tasks_url
+      expect(response.body).to include("<p>Missing Priorities: 1 3 4 </p>")
     end
   end
 
@@ -66,7 +87,7 @@ RSpec.describe "/tasks", type: :request do
 
       it "redirects to the created task" do
         post tasks_url, params: { task: valid_attributes }
-        expect(response).to redirect_to(task_url(Task.last))
+        expect(response).to redirect_to(tasks_url)
       end
     end
 
@@ -77,9 +98,9 @@ RSpec.describe "/tasks", type: :request do
         }.to change(Task, :count).by(0)
       end
 
-      it "renders a successful response (i.e. to display the 'new' template)" do
+      it "renders an unsuccessful response" do
         post tasks_url, params: { task: invalid_attributes }
-        expect(response).to be_successful
+        expect(response).to_not be_successful
       end
     end
   end
@@ -87,14 +108,15 @@ RSpec.describe "/tasks", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        { title: "Go to East End of Rundle", description: "Very technical scree", priority: 2 }
       }
 
       it "updates the requested task" do
         task = Task.create! valid_attributes
         patch task_url(task), params: { task: new_attributes }
         task.reload
-        skip("Add assertions for updated state")
+        expect(task.title).to_not eq("Ha Ling Peak")
+        expect(task.title).to eq("Go to East End of Rundle")
       end
 
       it "redirects to the task" do
@@ -106,10 +128,10 @@ RSpec.describe "/tasks", type: :request do
     end
 
     context "with invalid parameters" do
-      it "renders a successful response (i.e. to display the 'edit' template)" do
+      it "renders an unsuccessful response" do
         task = Task.create! valid_attributes
         patch task_url(task), params: { task: invalid_attributes }
-        expect(response).to be_successful
+        expect(response).to_not be_successful
       end
     end
   end

@@ -14,6 +14,8 @@ RSpec.describe "tasks/index", type: :view do
         priority: 2
       )
     ])
+
+    assign(:missing_priorities, [])
   end
 
   it "renders a list of tasks" do
