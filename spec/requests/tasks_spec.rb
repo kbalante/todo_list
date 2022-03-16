@@ -41,16 +41,16 @@ RSpec.describe "/tasks", type: :request do
       expect(response.body).to include("<p>Missing Priorities: </p>")
     end
 
-    it "shows the proper missing priority if there is at least one task with a priority" do
-      Task.create!(title: "Ha Ling Peak", description: "Best Trail in Canmore" )
-      Task.create!(title: "Ha Ling Peak2", description: "Best Trail in Canmore2", priority: 2 )
+    it "shows the proper missing priorities" do
+      Task.create!(title: "Ha Ling Peak", description: "Best Trail in Canmore", priority: 2 )
+      Task.create!(title: "Ha Ling Peak2", description: "Best Trail in Canmore2", priority: 3 )
       get tasks_url
       expect(response).to be_successful
       expect(response.body).to include("<p>Missing Priorities: 1 </p>")
 
       Task.create!(title: "Ha Ling Peak2", description: "Best Trail in Canmore2", priority: 5 )
       get tasks_url
-      expect(response.body).to include("<p>Missing Priorities: 1 3 4 </p>")
+      expect(response.body).to include("<p>Missing Priorities: 1 4 </p>")
     end
   end
 

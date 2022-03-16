@@ -16,9 +16,24 @@ RSpec.describe Task, type: :model do
     expect(task).to be_valid
   end
 
-  it "is valid without a priority" do
+  it "is not valid without a priority" do
     task = Task.new(title: "check out Ha Ling Peak", description: "Best trail in Canmore")
+    expect(task).to_not be_valid
+  end
+
+  it "is not valid with a negative priority" do
+    task = Task.new(title: "check out Ha Ling Peak", description: "Best trail in Canmore", priority: -1)
+    expect(task).to_not be_valid
+  end
+
+  it "is valid with a priority greater than or equal to 1 " do
+    task = Task.new(title: "check out Ha Ling Peak", description: "Best trail in Canmore", priority: 1)
     expect(task).to be_valid
+  end
+
+  it "is not valid with a priority equal to 0" do
+    task = Task.new(title: "check out Ha Ling Peak", description: "Best trail in Canmore", priority: 0)
+    expect(task).to_not be_valid
   end
 
   it "orders by priority" do
