@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
   # GET /tasks or /tasks.json
   def index
-    @tasks = Task.all
+    @tasks = Task.by_priority
     @missing_priorities = missing_priorities
   end
 
